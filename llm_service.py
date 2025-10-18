@@ -2,7 +2,7 @@ import requests
 import json
 import re
 
-API_KEY = "AIzaSyCcwjH2qar9rGeB2XTJvKOveFNHXFsoH9g"
+API_KEY = "your_api_key_here"
 
 def call_gemini(prompt):
     """Generic function to call Gemini API"""
