@@ -3,17 +3,45 @@ import json
 import re
 
 # Your Gemini Pro API key
-API_KEY = "your_actual_api_key_here"
+API_KEY = "AIzaSyD52atsJLgOx94avIYun3-gYYKn1Q160QM"
 
-def generate_titles(keyword):
+def generate_titles(keyword, original_title="", meta_description=""):
     """
     Calls Gemini Pro API to generate 3 SEO-friendly titles for a given keyword.
     Returns a list of titles.
     """
     # The prompt we send to the AI
-    prompt = f"Generate exactly 3 SEO-friendly blog titles (max 60 chars) for the keyword: '{keyword}'. List them as simple numbered items."
+    prompt = f"""
+You are an expert SEO copywriter. Your task is to generate exactly 3 optimized blog titles 
+for the given keyword and meta description.
 
-    # Correct Gemini API endpoint
+### Rules:
+1. Each title must be **SEO-friendly** and include the keyword or a natural variation.
+2. Each title must be **≤ 60 characters**.
+3. Avoid using excessive punctuation or emojis.
+4. Be catchy but relevant — aim for high click-through potential.
+5. Return the result as a **pure JSON array** of strings (no numbering, no explanation).
+
+### Input:
+keyword: "{keyword}"
+original_title: "{original_title}"
+meta_description: "{meta_description}"
+
+### Example:
+Input:
+keyword: "python tips"
+original_title: "Python tips for beginners"
+meta_description: "Learn Python basics and practical tips to get started fast."
+
+Output:
+["Python Tips for Beginners: Start Fast",
+ "Top 7 Python Tips Every Beginner Should Know",
+ "Quick Python Hacks: Speed Up Your Learning"]
+
+Now, produce the 3 optimized titles for the input above.
+"""
+
+
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={API_KEY}"
 
     # Request payload for Gemini

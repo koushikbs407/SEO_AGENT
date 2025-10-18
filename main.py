@@ -94,7 +94,7 @@ if __name__ == "__main__":
             'title_2': titles[1] if len(titles) > 1 else '',
             'title_3': titles[2] if len(titles) > 2 else '',
             'best_title': best_title,
-            'best_score': evaluations[0]['score'] if evaluations else 0,
+            'best_score': max([e.get('CTR_score', 0) + e.get('Keyword_relevance', 0) for e in evaluations]) if evaluations else 0,
             'selection_reason': selection_reason,
             'status': 'success'
         }
