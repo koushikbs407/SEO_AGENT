@@ -3,7 +3,7 @@ import json
 import re
 
 # Your Gemini Pro API key
-API_KEY = "API KEY HERE"
+API_KEY = "AIzaSyD52atsJLgOx94avIYun3-gYYKn1Q160QM"
 
 def generate_titles(keyword):
     """

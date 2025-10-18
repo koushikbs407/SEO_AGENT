@@ -1,7 +1,6 @@
 import pandas as pd
 import time
-from generate_titles import generate_titles
-from evaluate_test import evaluate_titles, print_evaluation_report
+from llm_service import step1_generate_titles, step2_evaluate_titles, step3_select_best
 
 
 def read_csv(filepath):
@@ -58,9 +57,10 @@ if __name__ == "__main__":
         print(f"\n[{idx}/{len(df)}] Processing keyword: {keyword}")
         print("-" * 70)
 
-        # Generate titles using Gemini API
-        titles = generate_titles(keyword)
-
+        # Step 1: Generate 3 candidate titles
+        print("Step 1: Generating titles...")
+        titles = step1_generate_titles(keyword)
+        
         if not titles:
             print(f"[WARNING] No titles generated for '{keyword}'. Skipping...")
             results.append({
@@ -69,29 +69,33 @@ if __name__ == "__main__":
                 'title_2': '',
                 'title_3': '',
                 'best_title': '',
-                'score': 0,
+                'best_score': 0,
                 'status': 'failed'
             })
             continue
+        
+        print(f"Generated titles: {titles}")
+        
+        # Step 2: Evaluate each title
+        print("Step 2: Evaluating titles...")
+        evaluations = step2_evaluate_titles(keyword, titles)
+        
+        # Step 3: Select best title
+        print("Step 3: Selecting best title...")
+        best_title, selection_reason = step3_select_best(keyword, titles, evaluations)
+        
+        print(f"Selected: {best_title}")
+        print(f"Reason: {selection_reason}")
 
-        # Evaluate generated titles
-        best, reasoning = evaluate_titles(keyword, titles)
-
-        # Print detailed evaluation report
-        print_evaluation_report(keyword, titles, best, reasoning)
-
-        # Save evaluation details in memory
+        # Save results
         result = {
             'keyword': keyword,
             'title_1': titles[0] if len(titles) > 0 else '',
             'title_2': titles[1] if len(titles) > 1 else '',
             'title_3': titles[2] if len(titles) > 2 else '',
-            'best_title': best,
-            'score': reasoning.get('score', 0),
-            'length': reasoning.get('length', 0),
-            'has_keyword': reasoning.get('keyword_included', False),
-            'has_power_words': reasoning.get('has_power_words', False),
-            'has_numbers': reasoning.get('has_numbers', False),
+            'best_title': best_title,
+            'best_score': evaluations[0]['score'] if evaluations else 0,
+            'selection_reason': selection_reason,
             'status': 'success'
         }
 

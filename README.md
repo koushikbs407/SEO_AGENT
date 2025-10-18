@@ -1,13 +1,19 @@
 # SEO Agent - Blog Title Generator
 
-Automated SEO-friendly blog title generator using Google Gemini AI with intelligent evaluation system.
+Automated SEO-friendly blog title generator using Google Gemini AI with 3-step intelligent evaluation system.
+
+## Architecture
+
+**Step 1**: Generate 3 candidate titles (≤60 chars) via LLM call
+**Step 2**: Evaluate each title for CTR potential and keyword relevance via LLM call  
+**Step 3**: Select best title based on evaluations via LLM call
 
 ## Features
 
-- Generate 3 SEO-optimized titles per keyword using Gemini AI
-- Intelligent title evaluation with scoring system
+- 3-step LLM pipeline for optimal title generation
+- AI-powered CTR and relevance evaluation
 - Batch processing from CSV input
-- Detailed evaluation reports
+- Detailed selection reasoning
 - Export results to CSV
 
 ## Setup
@@ -17,7 +23,7 @@ Automated SEO-friendly blog title generator using Google Gemini AI with intellig
 pip install pandas requests
 ```
 
-2. Add your Gemini API key in `generate_titles.py`
+2. Add your Gemini API key in `llm_service.py`
 
 3. Prepare input CSV with 'keyword' column
 
@@ -28,18 +34,18 @@ python main.py
 ```
 
 Input: `blog_ideas.csv` with keywords
-Output: `output_results.csv` with generated titles and scores
+Output: `output_results.csv` with all candidates and best selection
 
-## Scoring System
+## Output Format
 
-- +2 points: Contains target keyword
-- +1 point: Optimal length (40-60 chars)
-- +1 point: Contains power words
-- +1 point: Includes numbers
+- `title_1`, `title_2`, `title_3` - Generated candidates
+- `best_title` - AI-selected best title
+- `best_score` - Evaluation score
+- `selection_reason` - AI reasoning for selection
 
 ## Files
 
 - `main.py` - Main execution script
-- `generate_titles.py` - Gemini AI integration
-- `evaluate_test.py` - Title evaluation logic
+- `llm_service.py` - 3-step LLM pipeline
+- `evaluate_test.py` - Legacy evaluation logic
 - `utility.py` - Helper functions
